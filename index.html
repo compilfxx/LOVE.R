@@ -1,56 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Animation con Audio Corregido</title>
-  <style>
-    @import url(https://fonts.googleapis.com/css?family=Lato:300italic);
-    html, body {
-      width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
-      background: #ee9ca7; font-family: 'Lato', sans-serif;
-    }
-    .cake { /* Candle styles... */ }
-    .fuego { /* Fire styles... */ }
-    /* Resto de tu CSS para pastel y texto */
-  </style>
-</head>
-<body>
-  <!-- Tu animación de pastel aquí -->
-  <div class="cake"><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div></div>
-  <svg id="cake" width="200" height="500" viewBox="0 0 200 500">
-    <!-- SVG completo omitido por brevedad -->
-  </svg>
-  <div class="text">
-    <h1>Happy Birthday Karen!</h1>
-  </div>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Lato:300italic);
 
-  <!-- Audio persistente corregido -->
-  <audio id="backgroundMusic" loop preload="auto" muted>
-    <source src="mimusica.mp3" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-  </audio>
-  <script>
-    function setupMusic() {
-      const music = document.getElementById('backgroundMusic');
-      // Restablecer posición guardada
-      const savedTime = localStorage.getItem('musicCurrentTime');
-      if (savedTime) music.currentTime = parseFloat(savedTime);
-      // Intentar reproducir en silencio (permitido por políticas modernas)
-      music.play().catch(() => {});
-      music.addEventListener('play', () => localStorage.setItem('musicPlaying','true'));
-      music.addEventListener('pause', () => localStorage.setItem('musicPlaying','false'));
-      setInterval(() => {
-        localStorage.setItem('musicCurrentTime', music.currentTime);
-      }, 1000);
-      // Primero clic: quitar mute y reanudar audio
-      document.addEventListener('click', function startMusic() {
-        music.muted = false;
-        music.play().catch(e => console.log('Error al reproducir:', e));
-        document.removeEventListener('click', startMusic);
-      });
-    }
-    document.addEventListener('DOMContentLoaded', setupMusic);
-  </script>
-</body>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        scrollbar-width: none;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #ee9ca7;
+      }
+
+      .name{
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      #cake {
+        display: block;
+        position: relative;
+        margin: -10em auto 0 auto;
+      }
+
+      /* Candle */
+      .cake {
+        background: #ffffff;
+        border-radius: 10px;
+        position: absolute;
+        top: 228px;
+        left: 50%;
+        margin-left: -2.4px;
+        width: 5px;
+        height: 35px;
+        transform: translateY(-300px);
+        backface-visibility: hidden;
+        animation: in 500ms 6s ease-out forwards;
+      }
+      .cake:after,
+      .cake:before {
+        background: rgba(255, 0, 0, 0.4);
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2.22222222px;
+      }
+      .cake:after { top: 25%; left: 0; }
+      .cake:before { top: 45%; left: 0; }
+
+      /* Fire */
+      .fuego {
+        border-radius: 100%;
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        margin-left: -2.6px;
+        width: 6.66666667px;
+        height: 18px;
+      }
+      .fuego:nth-child(1) { animation: fuego 2s 6.5s infinite; }
+      .fuego:nth-child(2) { animation: fuego 1.5s 6.5s infinite; }
+      .fuego:nth-child(3) { animation: fuego 1s 6.5s infinite; }
+      .fuego:nth-child(4) { animation: fuego 0.5s 6.5s infinite; }
+      .fuego:nth-child(5) { animation: fuego 0.2s 6.5s infinite; }
+
+      /* Animation Fire */
+      @keyframes fuego {
+        0%, 100% {
+          background: rgba(254, 248, 97, 0.5);
+          box-shadow: 0 0 40px 10px rgba(248, 233, 209, 0.2);
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          background: rgba(255, 50, 0, 0.1);
+          box-shadow: 0 0 40px 20px rgba(248, 233, 209, 0.2);
+          transform: translateY(-20px) scale(0);
+        }
+      }
+
+      @keyframes in {
+        to { transform: translateY(0); }
+      }
+
+      .text {
+        color: #8b6a60;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        font-style: italic;
+        text-align: center;
+      }
+      .text h1 { font-size: 1.4em; }
+    </style>
+  </head>
+  <body>
+      <div class="cake">
+        <div class="fuego"></div>
+        <div class="fuego"></div>
+        <div class="fuego"></div>
+        <div class="fuego"></div>
+        <div class="fuego"></div>
+      </div>
+      <svg id="cake" version="1.1" x="0px" y="0px" width="200px" height="500px" viewBox="0 0 200 500" xml:space="preserve">
+        <!-- (Incluye aquí todos tus <path> y <animate> originales) -->
+      </svg>
+      <div class="text">
+      <h1>happy birthday<br>Karen!</h1>
+      <p class="name"></p>
+      </div>
+
+      <!-- Audio persistence snippet -->
+      <audio id="backgroundMusic" loop preload="auto" muted>
+        <source src="mimusica.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+      <script>
+        function setupMusic() {
+          const music = document.getElementById('backgroundMusic');
+          const savedTime = localStorage.getItem('musicCurrentTime') || 0;
+          music.currentTime = parseFloat(savedTime);
+          // Reproducir mudo para sortear políticas de autoplay
+          music.play().catch(() => {});
+          music.addEventListener('play', () => localStorage.setItem('musicPlaying','true'));
+          music.addEventListener('pause', () => localStorage.setItem('musicPlaying','false'));
+          setInterval(() => {
+            localStorage.setItem('musicCurrentTime', music.currentTime);
+          }, 1000);
+          document.addEventListener('click', function startMusic() {
+            music.muted = false;
+            music.play().catch(e => console.log('Error al reproducir:', e));
+            document.removeEventListener('click', startMusic);
+          });
+        }
+        document.addEventListener('DOMContentLoaded', setupMusic);
+      </script>
+  </body>
 </html>
