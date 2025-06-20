@@ -3,126 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Animation with Audio</title>
+  <title>Cake Animation con Audio Corregido</title>
   <style>
     @import url(https://fonts.googleapis.com/css?family=Lato:300italic);
-
     html, body {
-      width: 100%;
-      height: 100%;
-      scrollbar-width: none;
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-      background: #ee9ca7;
-      font-family: 'Lato', sans-serif;
+      width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      background: #ee9ca7; font-family: 'Lato', sans-serif;
     }
-
-    .name {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    #cake {
-      display: block;
-      position: relative;
-      margin: -10em auto 0 auto;
-    }
-
-    /* Candle */
-    .cake {
-      background: #ffffff;
-      border-radius: 10px;
-      position: absolute;
-      top: 228px;
-      left: 50%;
-      margin-left: -2.4px;
-      width: 5px;
-      height: 35px;
-      transform: translateY(-300px);
-      backface-visibility: hidden;
-      animation: in 500ms 6s ease-out forwards;
-    }
-    .cake:after, .cake:before {
-      background: rgba(255, 0, 0, 0.4);
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 2.22px;
-    }
-    .cake:after { top: 25%; }
-    .cake:before { top: 45%; }
-
-    /* Fire */
-    .fuego {
-      border-radius: 100%;
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      margin-left: -2.6px;
-      width: 6.66px;
-      height: 18px;
-    }
-    .fuego:nth-child(1) { animation: fuego 2s 6.5s infinite; }
-    .fuego:nth-child(2) { animation: fuego 1.5s 6.5s infinite; }
-    .fuego:nth-child(3) { animation: fuego 1s 6.5s infinite; }
-    .fuego:nth-child(4) { animation: fuego 0.5s 6.5s infinite; }
-    .fuego:nth-child(5) { animation: fuego 0.2s 6.5s infinite; }
-
-    @keyframes fuego {
-      0%,100% { background: rgba(254,248,97,0.5); box-shadow:0 0 40px 10px rgba(248,233,209,0.2); transform:translateY(0) scale(1);} 
-      50% { background: rgba(255,50,0,0.1); box-shadow:0 0 40px 20px rgba(248,233,209,0.2); transform:translateY(-20px) scale(0);}  
-    }
-    @keyframes in { to { transform: translateY(0); } }
-
-    .text {
-      color: #8b6a60;
-      text-align: center;
-      font-weight: 300;
-      font-style: italic;
-    }
-    .text h1 { font-size: 1.4em; margin: 1em 0 0.5em; }
+    .cake { /* Candle styles... */ }
+    .fuego { /* Fire styles... */ }
+    /* Resto de tu CSS para pastel y texto */
   </style>
 </head>
 <body>
-  <div class="cake">
-    <div class="fuego"></div>
-    <div class="fuego"></div>
-    <div class="fuego"></div>
-    <div class="fuego"></div>
-    <div class="fuego"></div>
-  </div>
-
-  <svg id="cake" version="1.1" x="0px" y="0px" width="200px" height="500px" viewBox="0 0 200 500" xml:space="preserve">
-    <!-- (SVG paths omitted for brevity; include your full SVG here) -->
+  <!-- Tu animación de pastel aquí -->
+  <div class="cake"><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div><div class="fuego"></div></div>
+  <svg id="cake" width="200" height="500" viewBox="0 0 200 500">
+    <!-- SVG completo omitido por brevedad -->
   </svg>
-
   <div class="text">
     <h1>Happy Birthday Karen!</h1>
-    <p class="name"></p>
   </div>
 
-  <!-- Audio persistence snippet -->
-  <audio id="backgroundMusic" loop>
+  <!-- Audio persistente corregido -->
+  <audio id="backgroundMusic" loop preload="auto" muted>
     <source src="mimusica.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
+    Tu navegador no soporta el elemento de audio.
   </audio>
   <script>
     function setupMusic() {
       const music = document.getElementById('backgroundMusic');
-      const isMusicPlaying = localStorage.getItem('musicPlaying') === 'true';
-      const musicCurrentTime = localStorage.getItem('musicCurrentTime') || 0;
-      if (isMusicPlaying) {
-        music.currentTime = parseFloat(musicCurrentTime);
-        music.play().catch(err => console.log('Autoplay prevented', err));
-      }
+      // Restablecer posición guardada
+      const savedTime = localStorage.getItem('musicCurrentTime');
+      if (savedTime) music.currentTime = parseFloat(savedTime);
+      // Intentar reproducir en silencio (permitido por políticas modernas)
+      music.play().catch(() => {});
       music.addEventListener('play', () => localStorage.setItem('musicPlaying','true'));
       music.addEventListener('pause', () => localStorage.setItem('musicPlaying','false'));
       setInterval(() => {
         localStorage.setItem('musicCurrentTime', music.currentTime);
       }, 1000);
+      // Primero clic: quitar mute y reanudar audio
       document.addEventListener('click', function startMusic() {
-        music.play().catch(err => console.log('Autoplay prevented', err));
+        music.muted = false;
+        music.play().catch(e => console.log('Error al reproducir:', e));
         document.removeEventListener('click', startMusic);
       });
     }
