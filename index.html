@@ -288,11 +288,27 @@
       </h1>
       <p class="name"></p>
       </div>
-      <audio id="mimusica" 
-              src="mimusica"
-              autoplay
-              loop
-              style="displey: none;">
-      </audio>
+<audio
+      id="birthday-audio"
+      src="mimusica.mp3"
+      autoplay
+      loop
+      muted
+      style="display:none;"
+    >
+      Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <script>
+      // En el primer clic del usuario quitamos "muted" para que se oiga
+      document.addEventListener('click', function desbloquearAudio() {
+        const audio = document.getElementById('birthday-audio');
+        if (audio.muted) {
+          audio.muted = false;
+          audio.volume = 0.8;  // Ajusta el volumen si lo deseas
+        }
+        document.removeEventListener('click', desbloquearAudio);
+      });
+    </script>
   </body>
 </html>
